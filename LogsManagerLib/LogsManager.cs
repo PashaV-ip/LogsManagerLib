@@ -19,84 +19,61 @@ namespace LogsManagerLib
         }
         public async Task WriteLog(string textString, string name, DateTime dateTime)
         {
-
-            /*var filePath = _path + @"\" + name + ".txt";
-            if (!File.Exists(filePath))
-            {
-                File.Create(filePath).Close();
-                using (StreamWriter streamWriter = new StreamWriter(filePath, true))
-                {
-                    await streamWriter.WriteLineAsync($"_______________________________________________________________\n" +
-                              $"####     Дата создания файла:       {DateTime.Now.ToString("hh:mm | dd.MM.yyyy")}     ####\n" +
-                              $"_______________________________________________________________");
-                }
-            }
-            using (StreamWriter streamWriter = new StreamWriter(filePath, true))
-            {
-                await streamWriter.WriteLineAsync($"_______________________________________________________________\n" +
-                    $"#### {text} ####");
-            }*/
-
-
-
-
-
-            //using (StreamWriter streamWriter = new StreamWriter(filePath, true))
-            //{
             var filePath = _path + @"\" + name + ".txt";
             if (!File.Exists(filePath))
             {
                 File.Create(filePath).Close();
                 using (StreamWriter streamWriter = new StreamWriter(filePath, true))
                 {
-                    Console.WriteLine($"_____________________________________________________________________________________\n" +
-                              $"####                Дата создания файла:       {DateTime.Now.ToString("hh:mm | dd.MM.yyyy")}                ####\n" +
+                    await streamWriter.WriteLineAsync($"_____________________________________________________________________________________\n" +
+                              $"####                Дата создания файла:       {DateTime.Now.ToString("HH:mm | dd.MM.yyyy")}                ####\n" +
                               $"####_____________________________________________________________________________####");
                 }
             }
+            using (StreamWriter streamWriter = new StreamWriter(filePath, true))
+            {
                 if (textString.Length == 53)
-                    Console.WriteLine($"#### {dateTime.ToString("hh:mm | dd.MM.yyyy")} || {textString} ####");
+                    await streamWriter.WriteLineAsync($"#### {dateTime.ToString("HH:mm | dd.MM.yyyy")} || {textString} ####");
                 else if (textString.Length < 53)
                 {
                     while (textString.Length != 53)
                     {
                         textString += " ";
                     }
-                    Console.WriteLine($"#### {dateTime.ToString("hh:mm | dd.MM.yyyy")} || {textString} ####");
+                    await streamWriter.WriteLineAsync($"#### {dateTime.ToString("HH:mm | dd.MM.yyyy")} || {textString} ####");
                 }
                 else if (textString.Length > 53)
                 {
                     int index = 0;
-                    string tmpTextOne = "";
-                    string tmpTextTwo = "";
+                    string tmpText = "";
                     string[] tmpTextArray = textString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     textString = "";
                     while (index < tmpTextArray.Length)
                     {
-                        if ((tmpTextOne + tmpTextArray[index]).Length < 53)
+                        if ((tmpText + tmpTextArray[index]).Length < 53)
                         {
-                            tmpTextOne += tmpTextArray[index] + " ";
+                            tmpText += tmpTextArray[index] + " ";
                             index++;
                         }
                         else
                         {
-                            while (tmpTextOne.Length != 53)
+                            while (tmpText.Length != 53)
                             {
-                                tmpTextOne += " ";
+                                tmpText += " ";
                             }
-                            textString += tmpTextOne + " ####\n####                    || ";
-                            tmpTextOne = "";
+                            textString += tmpText + " ####\n####                    || ";
+                            tmpText = "";
                         }
                     }
-                    while (tmpTextOne.Length != 53)
+                    while (tmpText.Length != 53)
                     {
-                        tmpTextOne += " ";
+                        tmpText += " ";
                     }
-                    textString += tmpTextOne;
-                    Console.WriteLine($"#### {dateTime.ToString("hh:mm | dd.MM.yyyy")} || {textString} ####");
+                    textString += tmpText;
+                    await streamWriter.WriteLineAsync($"#### {dateTime.ToString("HH:mm | dd.MM.yyyy")} || {textString} ####");
                 }
-                Console.WriteLine($"####_____________________________________________________________________________####");
-            //}
+                await streamWriter.WriteLineAsync($"####_____________________________________________________________________________####");
+            }
         }
     }
 }
